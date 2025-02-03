@@ -108,7 +108,7 @@ public class UsersManagementService {
         return res;
     }
 
-    public ReqRes getUserById(Long id) {
+    public ReqRes getUserById(Integer id) {
         ReqRes res = new ReqRes();
         try {
             UserEntity user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found!"));
@@ -121,7 +121,7 @@ public class UsersManagementService {
         }
         return res;
     }
-    public ReqRes deleteUser(Long id ) {
+    public ReqRes deleteUser(Integer id ) {
         ReqRes res = new ReqRes();
         try {
             Optional<UserEntity> user = userRepository.findById(id);
@@ -141,7 +141,7 @@ public class UsersManagementService {
         return res;
     }
 
-    public ReqRes updateUser(Long id , ReqRes updatedUser) {
+    public ReqRes updateUser(Integer id , ReqRes updatedUser) {
         ReqRes res = new ReqRes();
         try {
             Optional<UserEntity> user = userRepository.findById(id);

@@ -29,5 +29,10 @@ public class ReqRes {
 
     public ReqRes(int i, String accessTokenIsRequired) {
     }
+    public ReqRes() {
+    }
+
+    public ReqRes(String success, CampaignDto campaignDto) {
+    }
 }
 

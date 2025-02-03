@@ -20,11 +20,11 @@ public class UserController {
         return ResponseEntity.ok(usersManagementService.getAllUsers());
     }
     @GetMapping("/admin/get-users/{id}")
-    public ResponseEntity<ReqRes> getUser(@PathVariable Long id) {
+    public ResponseEntity<ReqRes> getUser(@PathVariable Integer id) {
         return ResponseEntity.ok(usersManagementService.getUserById(id));
     }
     @GetMapping("/admin/update/{id}")
-    public ResponseEntity<ReqRes> updateUser(@PathVariable Long id, @RequestBody ReqRes reqRes ) {
+    public ResponseEntity<ReqRes> updateUser(@PathVariable Integer id, @RequestBody ReqRes reqRes ) {
         return ResponseEntity.ok(usersManagementService.updateUser(id, reqRes));
     }
 

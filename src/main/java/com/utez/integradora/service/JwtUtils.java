@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.function.Function;
 
-@Component("jwtUtils")
+@Component
 //permite inyectarlo en otras partes de la aplicacion
 public class JwtUtils {
     /*
@@ -27,7 +27,7 @@ public class JwtUtils {
         this.secretKey = new SecretKeySpec(keyBytes, "hmacSHA256");
     }
 
-    public String generateToken(UserDetails userDetails) {
+        public String generateToken(UserDetails userDetails) {
     return Jwts.builder()
             .subject(userDetails.getUsername()) //IDENTIFICADOR (NOMBRE DEL USUARIO)
             .issuedAt(new Date(System.currentTimeMillis())) //CREACION DEL TOKEN
@@ -53,6 +53,7 @@ public class JwtUtils {
     public <T> T extractClaims(String token, Function<Claims, T> claimsResolver) {
         return claimsResolver.apply(Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getBody());
     }
+
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
