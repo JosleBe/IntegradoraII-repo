@@ -1,10 +1,13 @@
 package com.utez.integradora.controller;
 
 import com.utez.integradora.entity.CampaignEntity;
+import com.utez.integradora.entity.dto.ApiResponse;
 import com.utez.integradora.entity.dto.CampaignDto;
 import com.utez.integradora.entity.dto.ReqRes;
 import com.utez.integradora.service.CampaignService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,51 +15,43 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/campaign")
 public class CampaignController {
-    private final CampaignService campaignService;
-    @PostMapping
-    public ResponseEntity<CampaignDto> createCampaign(@RequestBody CampaignEntity campaignEntity) {
-        CampaignDto createdCampaign = campaignService.createCampaign(campaignEntity);
-        return ResponseEntity.ok(createdCampaign);
-    }
 
+    private final CampaignService campanaService;
+
+    // Endpoint para crear una nueva campaña
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse> crearCampana(@RequestBody CampaignDto campanaDTO) {
+        log.info("Creando campana " + campanaDTO);
+        try {
+            // Llamamos al servicio para crear la campaña
+            CampaignEntity campana = campanaService.crearCampana(campanaDTO);
+
+            // Retornamos la campaña creada con un código de estado HTTP 201 (Creado)
+            ApiResponse response = ApiResponse.success("Campaña creada exitosamente", campana);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            // Si hay un error, devolvemos un código de error 500 con el mensaje de error
+            ApiResponse response = ApiResponse.error("Error al crear la campaña: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @GetMapping
-    public ResponseEntity<List<CampaignDto>> getAllCampaigns() {
-        List<CampaignDto> campaigns = campaignService.getAllCampaigns();
-        return ResponseEntity.ok(campaigns);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ReqRes> getCampaignById(@PathVariable String id) {
-        Optional<CampaignDto> campaign = campaignService.getCampaignById(id);
-        if (campaign.isPresent()) {
-            return ResponseEntity.ok(new ReqRes("success", campaign.get()));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ReqRes> updateCampaign(@PathVariable String id, @RequestBody CampaignEntity campaignEntity) {
-        Optional<CampaignDto> updatedCampaign = campaignService.updateCampaign(id, campaignEntity);
-        if (updatedCampaign.isPresent()) {
-            return ResponseEntity.ok(new ReqRes("success", updatedCampaign.get()));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ReqRes> deleteCampaign(@PathVariable String id) {
-        campaignService.deleteCampaign(id);
-        if(campaignService.getCampaignById(id).isEmpty()){
-            return ResponseEntity.ok(new ReqRes(200, "Campaign deleted successfully"));
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<ApiResponse> getAllCampaigns() {
+        log.info("Listando todas las campanas");
+        try {
+            List<CampaignEntity> campaigns = campanaService.getAllCampaigns();
+            log.info("hola");
+            if (campaigns.isEmpty()) {
+                return ResponseEntity.status(404).body(new ApiResponse(404, "No se encontraron campañas", null));
+            }
+            return ResponseEntity.ok(new ApiResponse(200, "Campañas obtenidas con éxito", campaigns));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ApiResponse(500, e.getMessage(), null));
         }
     }
 }

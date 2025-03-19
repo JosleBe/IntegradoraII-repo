@@ -11,17 +11,17 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-@Entity
-@Table(name = "user")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+import java.util.Set;
+
+@Document(collection = "user")
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserEntity implements UserDetails, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
     private String name;
     private String lastName;
     @Column(unique = true)
@@ -34,6 +34,7 @@ public class UserEntity implements UserDetails, Serializable {
     private String sexo;
     private String sessionId;
     private String role;
+    private Set<Contacto> contactosSet;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

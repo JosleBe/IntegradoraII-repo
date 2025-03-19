@@ -41,7 +41,7 @@ public class UsersManagementService {
                     .lastName(reqRes.getLastName())
                     .build();
             UserEntity user = userRepository.save(ourUsers);
-            if(user.getId()>0){
+            if(user.getId()  != null){
                 res.setUser(user);
                 res.setMessage("User successfully registered!");
                 res.setStatusCode(200);
@@ -119,7 +119,7 @@ public class UsersManagementService {
         return res;
     }
 
-    public ReqRes getUserById(Integer id) {
+    public ReqRes getUserById(String id) {
         ReqRes res = new ReqRes();
         try {
             UserEntity user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found!"));
@@ -132,7 +132,7 @@ public class UsersManagementService {
         }
         return res;
     }
-    public ReqRes deleteUser(Integer id ) {
+    public ReqRes deleteUser(String id ) {
         ReqRes res = new ReqRes();
         try {
             Optional<UserEntity> user = userRepository.findById(id);
@@ -152,7 +152,7 @@ public class UsersManagementService {
         return res;
     }
 
-    public ReqRes updateUser(Integer id , ReqRes updatedUser) {
+    public ReqRes updateUser(String id , ReqRes updatedUser) {
         updatedUser.setPassword("");
         ReqRes res = new ReqRes();
         try {
@@ -207,5 +207,17 @@ public class UsersManagementService {
             res.setMessage(e.getMessage());
         }
         return res;
+    }
+    public Optional<UserEntity> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public void changePassword(UserEntity user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    public boolean checkPassword(UserEntity user, String password) {
+        return passwordEncoder.matches(password, user.getPassword());
     }
 }

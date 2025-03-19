@@ -11,13 +11,19 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class CampaignEntity {
     @Id
     private String id;
-    private String name;
-    private String description;
+    private String alignment;
     private String image;
-    private String location;
-    private double progress;
-    private double goal;
-
+    private String categoria;
+    private String nombre;
+    private String descripcion;
+    private String fechaInicio;
+    private String fechaFin;
+    private String meta;
+    private String lugar;
+    private String recursoTipo;
+    private String  cantidad;
+    private LocationEntity  location;
+    private TemplateEntity templateEntity;
 
 }
 

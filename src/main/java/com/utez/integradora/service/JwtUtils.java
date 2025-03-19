@@ -19,7 +19,7 @@ public class JwtUtils {
     GENERACION, VALIDACION Y EXTRACCIÓN DE TOKENS
      */
     private SecretKey secretKey;
-    private static final long EXPIRATION_TIME = 60 * 60 * 24 * 7;
+    private static final long EXPIRATION_TIME = 86400000  ;
     public JwtUtils() {
         //CONIFIGURAR LA CLAVE SECRETA QUE SE USARA PARA FIRMAR LOS TOKENS 0
         String secreteString  = "EstaEsUnaClaveMuySeguraYConSuficientesCaracteresParaHMACSHA256";
@@ -58,10 +58,21 @@ public class JwtUtils {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
-
+    // Extraer claims como email y displayName
+    public String extractClaim(String token, String claimKey) {
+        return extractClaims(token, claims -> claims.get(claimKey).toString());
+    }
 
     private boolean isTokenExpired(String token) {
         return extractClaims(token, Claims::getExpiration).before(new Date()); //COMPARACION DE HORAS
     }
-
+    public String validateJwt(String jwtToken) {
+        try {
+            // Extraer el subject (ID del usuario) del token
+            return extractUsername(jwtToken);
+        } catch (Exception e) {
+            // Manejar error si el token es inválido o expirado
+            throw new RuntimeException("Token inválido o expirado");
+        }
+    }
 }
