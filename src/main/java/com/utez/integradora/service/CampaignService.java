@@ -1,15 +1,18 @@
 package com.utez.integradora.service;
 
 import com.utez.integradora.entity.CampaignEntity;
+import com.utez.integradora.entity.CommentEntity;
 import com.utez.integradora.entity.LocationEntity;
 import com.utez.integradora.entity.TemplateEntity;
 import com.utez.integradora.entity.dto.CampaignDto;
 import com.utez.integradora.repository.CampaignRepository;
+import com.utez.integradora.repository.CommentRepository;
 import com.utez.integradora.repository.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,7 +23,7 @@ import java.util.stream.Collectors;
 public class CampaignService {
 
     private final CampaignRepository campanaRepository;
-
+    private final CommentRepository commentRepository;
 
     private final  LocationRepository locationRepository;  // Dependencia para obtener la ubicación por id
 
@@ -53,5 +56,19 @@ public class CampaignService {
     public List<CampaignEntity> getAllCampaigns() {
         log.info("Listando todas las campanas");
         return campanaRepository.findAll(); // Retorna todas las campañas almacenadas
+    }
+    public List<CommentEntity> getCommentsByCampaignId(String campaignId) {
+        return commentRepository.findByBlogEntityId(campaignId);
+    }
+
+    public CommentEntity addComment(String campaignId, String author, String text, String imageUrl) {
+        CampaignEntity blog = campanaRepository.findById(campaignId).orElseThrow();
+        CommentEntity comment = new CommentEntity();
+        comment.setAutor(author);
+        comment.setTexto(text);
+        comment.setImagen(imageUrl);
+        comment.setFecha(LocalDateTime.now());
+        comment.setBlogEntity(blog);
+        return commentRepository.save(comment);
     }
 }

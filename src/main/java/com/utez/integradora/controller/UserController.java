@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -115,5 +116,21 @@ public class UserController {
         usersManagementService.changePassword(userEntity, reqRes.getNewPassword());
 
         return ResponseEntity.ok("Contraseña cambiada exitosamente");
+    }
+    @GetMapping("/adminuser/all-admins")
+    public ResponseEntity<List<ReqRes>> getAllAdmins() {
+        log.info("Obteniendo todos los administradores");
+
+        List<UserEntity> admins = usuarioRepository.findAllByRole("ADMIN");
+
+        List<ReqRes> adminDtos = admins.stream()
+                .map(admin -> new ReqRes(admin.getName(), admin.getEmail()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(adminDtos);
+    }
+    @PostMapping("/create-account")
+    public ResponseEntity<ReqRes> register(@RequestBody ReqRes reqRes ) {
+        return ResponseEntity.ok(usersManagementService.register(reqRes));
     }
 }

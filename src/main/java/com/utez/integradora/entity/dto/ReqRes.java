@@ -42,5 +42,10 @@ public class ReqRes {
 
     public ReqRes(String success, CampaignDto campaignDto) {
     }
+
+    public ReqRes(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
 }
 

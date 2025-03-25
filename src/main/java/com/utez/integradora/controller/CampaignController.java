@@ -1,14 +1,17 @@
 package com.utez.integradora.controller;
 
 import com.utez.integradora.entity.CampaignEntity;
+import com.utez.integradora.entity.CommentEntity;
 import com.utez.integradora.entity.dto.ApiResponse;
 import com.utez.integradora.entity.dto.CampaignDto;
 import com.utez.integradora.entity.dto.ReqRes;
 import com.utez.integradora.service.CampaignService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -22,7 +25,7 @@ import java.util.Optional;
 public class CampaignController {
 
     private final CampaignService campanaService;
-
+    private final SimpMessagingTemplate messagingTemplate;
     // Endpoint para crear una nueva campaña
     @PostMapping("/register")
     public ResponseEntity<ApiResponse> crearCampana(@RequestBody CampaignDto campanaDTO) {
@@ -53,5 +56,17 @@ public class CampaignController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new ApiResponse(500, e.getMessage(), null));
         }
+    }
+    @GetMapping("/{campaignId}/comments")
+    public List<CommentEntity> getComments(@PathVariable String campaignId) {
+        return campanaService.getCommentsByCampaignId(campaignId);
+    }
+    @PostMapping("/{campaignId}/comments")
+
+    public CommentEntity addComment(@PathVariable String campaignId, @RequestBody CommentEntity comment) {
+        log.info("comentario");
+        CommentEntity commentEntity = campanaService.addComment(campaignId, comment.getAutor(), comment.getTexto(), comment.getImagen());
+        messagingTemplate.convertAndSend("/topic/campaign/" +campaignId , commentEntity);
+        return commentEntity;
     }
 }

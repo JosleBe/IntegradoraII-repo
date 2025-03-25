@@ -36,6 +36,9 @@ public class UserEntity implements UserDetails, Serializable {
     private String role;
     private Set<Contacto> contactosSet;
 
+    public UserEntity(String name, String email) {
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of (new SimpleGrantedAuthority(role));

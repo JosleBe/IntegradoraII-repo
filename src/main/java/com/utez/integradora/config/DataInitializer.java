@@ -54,6 +54,29 @@ public class DataInitializer implements CommandLineRunner {
         if(userRepository.existsByEmail(user4.getEmail()) == false) {
             userRepository.save(user4);
         }
-
+        UserEntity user5 = new UserEntity();
+        user5.setEmail("testw@example.com");
+        user5.setPassword(passwordEncoder.encode("testw"));
+        user5.setRole("USER");
+        user5.setName("Pedrito");
+        user5.setSexo("M");
+        user5.setPhone("7775012448");
+        user5.setLastName("Juaurez");
+        user5.setDireccion("Cuernavca, Morelos");
+        if(userRepository.existsByEmail(user5.getEmail()) == false) {
+            userRepository.save(user5);
+        }
+        UserEntity user6 = new UserEntity();
+        user6.setEmail("test@example.com");
+        user6.setPassword(passwordEncoder.encode("test123"));
+        user6.setRole("USER");
+        user6.setName("Brandon Doe");
+        user6.setSexo("M");
+        user6.setPhone("7775012448");
+        user6.setLastName("Martinez ");
+        user6.setDireccion("Cuernavca, Morelos");
+        if(userRepository.existsByEmail(user6.getEmail()) == false) {
+            userRepository.save(user6);
+        }
     }
 }

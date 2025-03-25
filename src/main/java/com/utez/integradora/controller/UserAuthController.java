@@ -73,7 +73,7 @@ public class UserAuthController {
 
             // 🔸 Crear usuario en Firebase si no existe
             UserRecord user;
-            try {
+            try {   
                 user = FirebaseAuth.getInstance().getUser(userId);
             } catch (Exception e) {
                 user = FirebaseAuth.getInstance().createUser(

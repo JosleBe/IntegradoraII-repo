@@ -75,4 +75,15 @@ public class JwtUtils {
             throw new RuntimeException("Token inválido o expirado");
         }
     }
+    public Claims validateJwt2(String token) {
+        try {
+            return Jwts.parser()// Método correcto para jjwt 0.12.5
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            return null; // Token inválido o expirado
+        }
+    }
 }

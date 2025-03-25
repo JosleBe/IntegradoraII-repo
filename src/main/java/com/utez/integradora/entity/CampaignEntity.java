@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Setter@Getter@Data
 @Document(collection = "campaign")
 public class CampaignEntity {
@@ -24,6 +26,7 @@ public class CampaignEntity {
     private String  cantidad;
     private LocationEntity  location;
     private TemplateEntity templateEntity;
+    private List<CommentEntity> comments;
 
 }
 
