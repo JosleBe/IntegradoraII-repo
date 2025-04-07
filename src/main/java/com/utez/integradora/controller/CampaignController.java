@@ -4,7 +4,9 @@ import com.utez.integradora.entity.CampaignEntity;
 import com.utez.integradora.entity.CommentEntity;
 import com.utez.integradora.entity.dto.ApiResponse;
 import com.utez.integradora.entity.dto.CampaignDto;
+import com.utez.integradora.entity.dto.DonationRequest;
 import com.utez.integradora.entity.dto.ReqRes;
+import com.utez.integradora.repository.CampaignRepository;
 import com.utez.integradora.service.CampaignService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,7 @@ import java.util.Optional;
 @RequestMapping("/api/campaign")
 public class CampaignController {
 
+    private final CampaignRepository  campaignRepository;
     private final CampaignService campanaService;
     private final SimpMessagingTemplate messagingTemplate;
     // Endpoint para crear una nueva campaña
@@ -69,4 +72,22 @@ public class CampaignController {
         messagingTemplate.convertAndSend("/topic/campaign/" +campaignId , commentEntity);
         return commentEntity;
     }
+
+    @PatchMapping("/{campaignId}/status/{status}")
+    public ResponseEntity<ApiResponse> updateCampaignStatus(
+            @PathVariable String campaignId,
+            @PathVariable boolean status) {
+        log.info("Actualizando el estado de la campaña con ID: " + campaignId);
+        try {
+            CampaignEntity updatedCampaign = campanaService.updateCampaignStatus(campaignId, status);
+            ApiResponse response = ApiResponse.success("Estado de la campaña actualizado exitosamente", updatedCampaign);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            // Si hay un error, devolvemos un mensaje de error
+            ApiResponse response = ApiResponse.error("Error al actualizar el estado de la campaña: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
+

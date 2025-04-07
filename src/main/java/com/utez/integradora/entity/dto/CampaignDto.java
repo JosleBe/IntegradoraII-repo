@@ -21,5 +21,7 @@ public class CampaignDto {
     private String locationId;  // Solo el ID de la ubicación
     private TemplateDto plantillaSeleccionada;
     private LocationDto location;
+    private ObjetoDto objeto;
+    private boolean estado;
 
 }

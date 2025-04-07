@@ -4,6 +4,7 @@ import com.utez.integradora.entity.UserEntity;
 import com.utez.integradora.entity.dto.ReqRes;
 import com.utez.integradora.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UsersManagementService {
@@ -103,6 +105,7 @@ public class UsersManagementService {
         ReqRes res = new ReqRes();
         try {
             List<UserEntity> users = userRepository.findAll();
+
             if (!users.isEmpty()) {
                 res.setStatusCode(200);
                 res.setMessage("Successfully retrieved all users!");

@@ -42,6 +42,8 @@ public class CampaignService {
         campana.setLugar(campanaDTO.getLugar());
         campana.setRecursoTipo(campanaDTO.getRecursoTipo());
         campana.setCantidad(campanaDTO.getCantidad());
+        campana.setObjeto(campanaDTO.getObjeto());
+        campana.setEstado(campanaDTO.isEstado());
 
         // Convertir la plantilla seleccionada (solo toma el codigo y nombre)
         TemplateEntity plantillaSeleccionada = new TemplateEntity();
@@ -71,4 +73,15 @@ public class CampaignService {
         comment.setBlogEntity(blog);
         return commentRepository.save(comment);
     }
+    public CampaignEntity updateCampaignStatus(String campaignId, boolean estado) {
+        Optional<CampaignEntity> campaign = campanaRepository.findById(campaignId);
+        if (campaign.isPresent()) {
+            CampaignEntity updatedCampaign = campaign.get();
+            updatedCampaign.setEstado(estado);
+            return campanaRepository.save(updatedCampaign);
+        }
+        throw new RuntimeException("Campaña no encontrada");
+    }
+
+
 }

@@ -12,6 +12,7 @@ import com.utez.integradora.service.UsersManagementService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,7 +32,7 @@ public class UserController {
     private final ContactoRepository contactoRepository;
     private final UserRepository usuarioRepository;
 
-    @GetMapping("/admin/get-all-users")
+    @GetMapping("/adminuser/get-all-users")
     public ResponseEntity<ReqRes> getAllUsers() {
         return ResponseEntity.ok(usersManagementService.getAllUsers());
     }
@@ -133,4 +134,16 @@ public class UserController {
     public ResponseEntity<ReqRes> register(@RequestBody ReqRes reqRes ) {
         return ResponseEntity.ok(usersManagementService.register(reqRes));
     }
+    @PatchMapping("/admin/disable-user/{id}")
+    public ResponseEntity<String> disableUser(@PathVariable String id) {
+        Optional<UserEntity> userOptional = usuarioRepository.findById(id);
+        if (userOptional.isPresent()) {
+            UserEntity user = userOptional.get();
+            user.setActive(false);
+            usuarioRepository.save(user);
+            return ResponseEntity.ok("User disabled successfully.");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+    }
+
 }

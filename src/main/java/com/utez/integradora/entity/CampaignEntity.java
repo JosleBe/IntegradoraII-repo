@@ -1,5 +1,6 @@
 package com.utez.integradora.entity;
 
+import com.utez.integradora.entity.dto.ObjetoDto;
 import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.Getter;
@@ -24,9 +25,11 @@ public class CampaignEntity {
     private String lugar;
     private String recursoTipo;
     private String  cantidad;
+    private Double amount;
     private LocationEntity  location;
     private TemplateEntity templateEntity;
     private List<CommentEntity> comments;
-
+    private ObjetoDto objeto;
+    private boolean estado;
 }
 

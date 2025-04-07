@@ -34,6 +34,7 @@ public class UserEntity implements UserDetails, Serializable {
     private String sexo;
     private String sessionId;
     private String role;
+    private boolean isActive;
     private Set<Contacto> contactosSet;
 
     public UserEntity(String name, String email) {
