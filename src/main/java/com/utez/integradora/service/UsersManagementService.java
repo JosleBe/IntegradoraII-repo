@@ -1,5 +1,7 @@
 package com.utez.integradora.service;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserRecord;
 import com.utez.integradora.entity.UserEntity;
 import com.utez.integradora.entity.dto.ReqRes;
 import com.utez.integradora.repository.UserRepository;
@@ -41,6 +43,7 @@ public class UsersManagementService {
                     .direccion(reqRes.getDireccion())
                     .fechaNacimiento(reqRes.getFecha())
                     .lastName(reqRes.getLastName())
+                    .isActive(true)
                     .build();
             UserEntity user = userRepository.save(ourUsers);
             if(user.getId()  != null){
@@ -105,7 +108,6 @@ public class UsersManagementService {
         ReqRes res = new ReqRes();
         try {
             List<UserEntity> users = userRepository.findAll();
-
             if (!users.isEmpty()) {
                 res.setStatusCode(200);
                 res.setMessage("Successfully retrieved all users!");
@@ -219,6 +221,18 @@ public class UsersManagementService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
+
+    public void updatePasswordInFirebase(String email, String newPassword) throws Exception {
+        // Obtén el registro de usuario por email
+        UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(email);
+
+        // Crea un objeto UserRecord.UpdateRequest y configura la nueva contraseña
+        UserRecord.UpdateRequest request = new UserRecord.UpdateRequest(userRecord.getUid());
+        request.setPassword(newPassword);
+
+        // Actualiza el usuario en Firebase con la nueva contraseña
+        FirebaseAuth.getInstance().updateUser(request);
+}
 
     public boolean checkPassword(UserEntity user, String password) {
         return passwordEncoder.matches(password, user.getPassword());

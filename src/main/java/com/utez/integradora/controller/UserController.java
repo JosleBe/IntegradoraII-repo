@@ -100,7 +100,7 @@ public class UserController {
 
         return ResponseEntity.ok(contacts);
     }
-    @PostMapping("/change-password")
+    @PutMapping("/change-password")
     public ResponseEntity<String> changePassword(@RequestBody ReqRes reqRes) {
         Optional<UserEntity> optionalUserEntity = usersManagementService.findByEmail(reqRes.getEmail());
 
@@ -110,14 +110,31 @@ public class UserController {
 
         UserEntity userEntity = optionalUserEntity.get();
 
+        // Verifica la contraseña actual
         if (!usersManagementService.checkPassword(userEntity, reqRes.getPassword())) {
             return ResponseEntity.status(403).body("Contraseña actual incorrecta");
         }
 
+        // Validación para la nueva contraseña
+        if (!isValidPassword(reqRes.getNewPassword())) {
+            return ResponseEntity.status(400).body("Nueva contraseña no válida");
+        }
         usersManagementService.changePassword(userEntity, reqRes.getNewPassword());
+
+        // Actualizar la contraseña en Firebase
+        try {
+            // Aquí llamas al servicio que actualiza la contraseña en Firebase
+            usersManagementService.updatePasswordInFirebase(userEntity.getEmail(), reqRes.getNewPassword());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error actualizando la contraseña en Firebase");
+        }
 
         return ResponseEntity.ok("Contraseña cambiada exitosamente");
     }
+
+    private boolean isValidPassword(String password) {
+        return password.length() >= 8; // contraseña de al menos 8 caracteres
+}
     @GetMapping("/adminuser/all-admins")
     public ResponseEntity<List<ReqRes>> getAllAdmins() {
         log.info("Obteniendo todos los administradores");

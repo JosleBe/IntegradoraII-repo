@@ -34,7 +34,7 @@ public class SecurityConfig {
         return httpSecurity.csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests( authorizeRequests ->
-                        authorizeRequests.requestMatchers("/api/auth/**",  "/api/send", "/api/{}/contacts", "/api/create-account").permitAll()
+                        authorizeRequests.requestMatchers("/api/auth/**",  "/api/send", "/api/{}/contacts", "/api/create-account", "/api/campaign", "api/campaign/{}/comments").permitAll()
                                 .requestMatchers("/ws/**").permitAll()
                                 /*.requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN")
                                 .requestMatchers("api/user/**").hasAnyAuthority("USER")

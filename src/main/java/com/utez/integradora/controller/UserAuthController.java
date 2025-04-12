@@ -24,12 +24,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserAuthController {
     private final UserRepository userRepository;
-
     static final Logger logger = LoggerFactory.getLogger(UserAuthController.class);
     private final JwtUtils jwtUtils;
     private final UsersManagementService usersManagementService;
-
-
     @PostConstruct
     public void initFirebase() {
         try {

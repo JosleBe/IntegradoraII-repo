@@ -56,4 +56,8 @@ public class BeneficiaryController {
     public boolean checkIfBeneficiaryRegistered(@RequestParam String campaignId, @RequestParam String beneficiaryId) {
         return beneficiaryService.isBeneficiaryRegistered(campaignId, beneficiaryId);
     }
+    @PostMapping("/check/beneficiary/{id}")
+    public boolean checkIfBeneficiaryRegistered(@PathVariable String id) {
+        return beneficiaryService.isBeneficiaryRegisteredGeneral(id);
+    }
 }

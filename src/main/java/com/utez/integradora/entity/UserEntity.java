@@ -1,5 +1,7 @@
 package com.utez.integradora.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -41,6 +43,7 @@ public class UserEntity implements UserDetails, Serializable {
     }
 
     @Override
+    @JsonSerialize(using = ToStringSerializer.class)
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of (new SimpleGrantedAuthority(role));
     }

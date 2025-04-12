@@ -23,7 +23,7 @@ public class DataInitializer implements CommandLineRunner {
         user.setPassword(passwordEncoder.encode("testweb"));
         user.setRole("ADMIN");
         user.setName("Jose Leonardo");
-        user.setSexo("M");
+        user.setSexo("H");
         user.setPhone("7775012448");
         user.setLastName("Martinez");
         user.setDireccion("Cuernavca, Morelos");
@@ -62,7 +62,7 @@ public class DataInitializer implements CommandLineRunner {
         user5.setPassword(passwordEncoder.encode("testw"));
         user5.setRole("USER");
         user5.setName("Pedrito");
-        user5.setSexo("M");
+        user5.setSexo("H");
         user5.setPhone("7775012448");
         user5.setLastName("Juaurez");
         user5.setDireccion("Cuernavca, Morelos");
@@ -75,13 +75,26 @@ public class DataInitializer implements CommandLineRunner {
         user6.setPassword(passwordEncoder.encode("test123"));
         user6.setRole("USER");
         user6.setName("Brandon Doe");
-        user6.setSexo("M");
+        user6.setSexo("H");
         user6.setPhone("7775012448");
         user6.setLastName("Martinez ");
         user6.setDireccion("Cuernavca, Morelos");
         user6.setActive(true);
         if(userRepository.existsByEmail(user6.getEmail()) == false) {
             userRepository.save(user6);
+        }
+        UserEntity user7 = new UserEntity();
+        user7.setEmail("testdos@example.com");
+        user7.setPassword(passwordEncoder.encode("testdos"));
+        user7.setRole("USER");
+        user7.setName("Erick");
+        user7.setSexo("H");
+        user7.setPhone("7775012448");
+        user7.setLastName("Martinez ");
+        user7.setDireccion("Cuernavca, Morelos");
+        user7.setActive(true);
+        if(userRepository.existsByEmail(user7.getEmail()) == false) {
+            userRepository.save(user7);
         }
     }
 }

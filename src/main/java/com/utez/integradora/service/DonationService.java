@@ -1,9 +1,9 @@
 package com.utez.integradora.service;
 
 import com.utez.integradora.entity.ArticuloEntity;
+import com.utez.integradora.entity.BeneficiaryEntity;
 import com.utez.integradora.entity.DonationEntity;
 import com.utez.integradora.entity.dto.ObjetoDto;
-import com.utez.integradora.entity.dto.PreDonationDto;
 import com.utez.integradora.repository.CampaignRepository;
 import com.utez.integradora.repository.DonationRepository;
 import com.utez.integradora.repository.PreDonationRepository;
@@ -155,4 +155,11 @@ public class DonationService {
 
         return donation;
     }*/
+
+    public boolean isDonorGeneral(String donorId) {
+        List<DonationEntity> existDonor = donationRepository.findByDonorId(donorId);
+        return !existDonor.isEmpty();
+    }
+
+
 }

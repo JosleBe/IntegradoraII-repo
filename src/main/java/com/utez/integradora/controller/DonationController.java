@@ -98,5 +98,10 @@ public class DonationController {
         return donationService.getTotalInsumosDonadosPorCampana(campaignId);
     }
 
+    @GetMapping("/check-donor/{id}")
+    public boolean checkDonorStatus(@PathVariable String id) {
+        return donationService.isDonorGeneral(id) ;
+    }
+
 
 }

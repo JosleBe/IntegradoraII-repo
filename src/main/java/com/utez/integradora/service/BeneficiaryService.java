@@ -43,4 +43,10 @@ public class BeneficiaryService {
     public void deleteBeneficiary(String id) {
         beneficiaryRepository.deleteById(id);
     }
+
+    public boolean isBeneficiaryRegisteredGeneral(String beneficiaryId) {
+        List<BeneficiaryEntity> existingBeneficiary = beneficiaryRepository.findByBeneficiaryId(beneficiaryId);
+        return !existingBeneficiary.isEmpty();
+    }
+
 }
