@@ -89,5 +89,18 @@ public class CampaignController {
         }
     }
 
+
+    @GetMapping("/campaign/{id}")
+    public ResponseEntity<ApiResponse> getCampaignById(@PathVariable String id) {
+        try {
+            CampaignEntity campaign =  campanaService.getCampaignById(id);
+            ApiResponse response = ApiResponse.success("Obteniendo campaña", campaign);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        }catch (Exception e) {
+            ApiResponse response = ApiResponse.error("Error al obtener campañas" +  e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
 

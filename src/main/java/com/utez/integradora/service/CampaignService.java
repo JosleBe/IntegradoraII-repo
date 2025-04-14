@@ -83,5 +83,8 @@ public class CampaignService {
         throw new RuntimeException("Campaña no encontrada");
     }
 
+    public CampaignEntity getCampaignById(String campaignId) {
+        return campanaRepository.findById(campaignId).orElseThrow();
+    }
 
 }
