@@ -1,8 +1,12 @@
 package com.utez.integradora.controller;
 
 import com.utez.integradora.entity.BeneficiaryEntity;
+import com.utez.integradora.entity.UserEntity;
+import com.utez.integradora.repository.UserRepository;
+import com.utez.integradora.repository.UserRepository;
 import com.utez.integradora.service.BeneficiaryService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +17,13 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/beneficiaries")
 public class BeneficiaryController {
-    private final BeneficiaryService beneficiaryService;
 
-    public BeneficiaryController(BeneficiaryService beneficiaryService) {
+    private final BeneficiaryService beneficiaryService;
+    private final UserRepository usuarioRepository;
+
+    public BeneficiaryController(BeneficiaryService beneficiaryService, UserRepository usuarioRepository) {
         this.beneficiaryService = beneficiaryService;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @GetMapping
@@ -48,12 +55,40 @@ public class BeneficiaryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBeneficiary(@PathVariable String id) {
-
         beneficiaryService.deleteBeneficiary(id);
         return ResponseEntity.noContent().build();
     }
+
     @PostMapping("/check")
     public boolean checkIfBeneficiaryRegistered(@RequestParam String campaignId, @RequestParam String beneficiaryId) {
         return beneficiaryService.isBeneficiaryRegistered(campaignId, beneficiaryId);
+    }
+
+    // ✅ NUEVO PATCH: habilitar usuario
+    @PatchMapping("/enable-user/{id}")
+    public ResponseEntity<String> enableUser(@PathVariable String id) {
+        Optional<UserEntity> userOptional = usuarioRepository.findById(id);
+        if (userOptional.isPresent()) {
+            UserEntity user = userOptional.get();
+            user.setActive(true);
+            usuarioRepository.save(user);
+            return ResponseEntity.ok("Usuario habilitado exitosamente.");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+    }
+    @PatchMapping("/toggle-status/{id}")
+    public ResponseEntity<?> toggleStatus(@PathVariable String id) {
+        Optional<BeneficiaryEntity> optional = beneficiaryService.getBeneficiaryById(id);
+        if (optional.isPresent()) {
+            BeneficiaryEntity beneficiary = optional.get();
+            beneficiary.setActive(!beneficiary.isActive());
+            beneficiaryService.saveBeneficiary(beneficiary);
+
+            // Si usas WebSocket, puedes notificar así:
+            // messagingTemplate.convertAndSend("/topic/beneficiarios", "actualizar");
+
+            return ResponseEntity.ok("Estado del beneficiario actualizado.");
+        }
+        return ResponseEntity.notFound().build();
     }
 }

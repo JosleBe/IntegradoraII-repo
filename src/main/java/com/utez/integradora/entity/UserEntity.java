@@ -1,5 +1,6 @@
 package com.utez.integradora.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -41,6 +42,7 @@ public class UserEntity implements UserDetails, Serializable {
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of (new SimpleGrantedAuthority(role));
     }

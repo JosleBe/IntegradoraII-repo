@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
+
 @Setter@Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -32,7 +33,6 @@ public class ReqRes {
     private String fechaNacimiento;
     private List<UserEntity> userEntityList;
     private String newPassword;
-
 
     public ReqRes(int i, String accessTokenIsRequired) {
 

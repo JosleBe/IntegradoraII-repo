@@ -12,8 +12,10 @@ import com.utez.integradora.service.UsersManagementService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -31,11 +32,13 @@ public class UserController {
     private final UsersManagementService usersManagementService;
     private final ContactoRepository contactoRepository;
     private final UserRepository usuarioRepository;
-
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
     @GetMapping("/adminuser/get-all-users")
     public ResponseEntity<ReqRes> getAllUsers() {
         return ResponseEntity.ok(usersManagementService.getAllUsers());
     }
+
     @GetMapping("/admin/get-users/{id}")
     public ResponseEntity<ReqRes> getUser(@PathVariable String id) {
         return ResponseEntity.ok(usersManagementService.getUserById(id));
@@ -53,6 +56,7 @@ public class UserController {
         ReqRes reqRes = usersManagementService.getMyInfo(email);
         return ResponseEntity.status(reqRes.getStatusCode()).body(reqRes);
     }
+
     @PostMapping("/send")
     public ResponseEntity<?> sendMessage(@RequestBody MessageRequest messageRequest) {
         log.info("Sending message");
@@ -66,14 +70,13 @@ public class UserController {
 
         UserEntity emisorEntity = emisor.get();
         UserEntity receptorEntity = receptor.get();
-        if (!contactoRepository.existsByReceptorAndEmisor(receptorEntity, emisorEntity)) {
 
+        if (!contactoRepository.existsByReceptorAndEmisor(receptorEntity, emisorEntity)) {
             Contacto contacto = new Contacto();
             contacto.setReceptor(receptorEntity);
             contacto.setEmisor(emisorEntity);
             contactoRepository.save(contacto);
         }
-
 
         return ResponseEntity.ok("Mensaje enviado y contacto guardado");
     }
@@ -81,14 +84,13 @@ public class UserController {
     @GetMapping("/{email}/contacts")
     public ResponseEntity<List<ContactDto>> getUserContacts(@PathVariable String email) {
         log.info("Get contactos");
-        // Buscar el usuario por su email
         Optional<UserEntity> usuario = usuarioRepository.findByEmail(email);
 
         if (usuario.isEmpty()) {
             return ResponseEntity.badRequest().body(null);
         }
 
-        List<Contacto> contactos = contactoRepository.findByReceptor(usuario.orElse(null));
+        List<Contacto> contactos = contactoRepository.findByReceptor(usuario.get());
         List<ContactDto> contacts = new ArrayList<>();
 
         for (Contacto contacto : contactos) {
@@ -100,11 +102,12 @@ public class UserController {
 
         return ResponseEntity.ok(contacts);
     }
+
     @PostMapping("/change-password")
     public ResponseEntity<String> changePassword(@RequestBody ReqRes reqRes) {
         Optional<UserEntity> optionalUserEntity = usersManagementService.findByEmail(reqRes.getEmail());
 
-        if (!optionalUserEntity.isPresent()) {
+        if (optionalUserEntity.isEmpty()) {
             return ResponseEntity.status(404).body("Usuario no encontrado");
         }
 
@@ -118,6 +121,7 @@ public class UserController {
 
         return ResponseEntity.ok("Contraseña cambiada exitosamente");
     }
+
     @GetMapping("/adminuser/all-admins")
     public ResponseEntity<List<ReqRes>> getAllAdmins() {
         log.info("Obteniendo todos los administradores");
@@ -130,10 +134,12 @@ public class UserController {
 
         return ResponseEntity.ok(adminDtos);
     }
+
     @PostMapping("/create-account")
     public ResponseEntity<ReqRes> register(@RequestBody ReqRes reqRes ) {
         return ResponseEntity.ok(usersManagementService.register(reqRes));
     }
+
     @PatchMapping("/admin/disable-user/{id}")
     public ResponseEntity<String> disableUser(@PathVariable String id) {
         Optional<UserEntity> userOptional = usuarioRepository.findById(id);
@@ -141,9 +147,25 @@ public class UserController {
             UserEntity user = userOptional.get();
             user.setActive(false);
             usuarioRepository.save(user);
-            return ResponseEntity.ok("User disabled successfully.");
+            return ResponseEntity.ok("Usuario deshabilitado exitosamente.");
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+    }
+
+    @PatchMapping("/admin/enable-user/{id}")
+    public ResponseEntity<String> enableUser(@PathVariable String id) {
+        Optional<UserEntity> userOptional = usuarioRepository.findById(id);
+        if (userOptional.isPresent()) {
+            UserEntity user = userOptional.get();
+            user.setActive(true);
+            usuarioRepository.save(user);
+
+            // Notifica por WebSocket a los clientes
+            messagingTemplate.convertAndSend("/topic/beneficiarios", "actualizar");
+
+            return ResponseEntity.ok("Usuario habilitado exitosamente.");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
     }
 
 }

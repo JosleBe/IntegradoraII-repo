@@ -21,4 +21,5 @@ public class BeneficiaryEntity {
     private String phone;
     private String name;
     private LocalDateTime joinDate;
+    private boolean active = true;
 }

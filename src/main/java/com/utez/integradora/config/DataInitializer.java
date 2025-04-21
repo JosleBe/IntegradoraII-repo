@@ -26,7 +26,7 @@ public class DataInitializer implements CommandLineRunner {
         user.setSexo("M");
         user.setPhone("7775012448");
         user.setLastName("Martinez");
-        user.setDireccion("Cuernavca, Morelos");
+        user.setDireccion("Cuernavaca, Morelos");
         user.setActive(true);
         if(userRepository.existsByEmail(user.getEmail()) == false) {
             userRepository.save(user);
@@ -39,7 +39,7 @@ public class DataInitializer implements CommandLineRunner {
         user2.setSexo("M");
         user2.setPhone("7775012448");
         user2.setLastName("Martinez");
-        user2.setDireccion("Cuernavca, Morelos");
+        user2.setDireccion("Cuernavaca, Morelos");
         user2.setActive(true);
         if(userRepository.existsByEmail(user2.getEmail()) == false) {
             userRepository.save(user2);
@@ -52,7 +52,7 @@ public class DataInitializer implements CommandLineRunner {
         user4.setSexo("M");
         user4.setPhone("7775012448");
         user4.setLastName("Martinez");
-        user4.setDireccion("Cuernavca, Morelos");
+        user4.setDireccion("Cuernavaca, Morelos");
         user4.setActive(true);
         if(userRepository.existsByEmail(user4.getEmail()) == false) {
             userRepository.save(user4);
@@ -64,8 +64,8 @@ public class DataInitializer implements CommandLineRunner {
         user5.setName("Pedrito");
         user5.setSexo("M");
         user5.setPhone("7775012448");
-        user5.setLastName("Juaurez");
-        user5.setDireccion("Cuernavca, Morelos");
+        user5.setLastName("Juarez");
+        user5.setDireccion("Cuernavaca, Morelos");
         user5.setActive(true);
         if(userRepository.existsByEmail(user5.getEmail()) == false) {
             userRepository.save(user5);
@@ -78,7 +78,7 @@ public class DataInitializer implements CommandLineRunner {
         user6.setSexo("M");
         user6.setPhone("7775012448");
         user6.setLastName("Martinez ");
-        user6.setDireccion("Cuernavca, Morelos");
+        user6.setDireccion("Cuernavaca, Morelos");
         user6.setActive(true);
         if(userRepository.existsByEmail(user6.getEmail()) == false) {
             userRepository.save(user6);

@@ -8,6 +8,8 @@ import java.util.List;
 @Repository
 public interface DonationRepository extends MongoRepository<DonationEntity, String> {
     List<DonationEntity> findByCampaignId(String campaignId);
+
     List<DonationEntity> findByDonorId(String donorId);
+
     boolean existsByDonorIdAndCampaignId(String donorId, String campaignId);
 }

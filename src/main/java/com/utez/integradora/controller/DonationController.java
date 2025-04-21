@@ -19,8 +19,8 @@ import java.util.Optional;
 @RequestMapping("/api/donations")
 @RequiredArgsConstructor
 public class DonationController {
-    private final DonationService donationService;
 
+    private final DonationService donationService;
 
     @GetMapping
     public List<DonationEntity> getAllDonations() {

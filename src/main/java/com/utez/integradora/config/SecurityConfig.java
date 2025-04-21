@@ -1,6 +1,5 @@
 package com.utez.integradora.config;
 
-
 import com.utez.integradora.service.UsrDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -36,10 +34,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests( authorizeRequests ->
                         authorizeRequests.requestMatchers("/api/auth/**",  "/api/send", "/api/{}/contacts", "/api/create-account").permitAll()
                                 .requestMatchers("/ws/**").permitAll()
+                                .requestMatchers("/api/campaign/**").permitAll()
                                 /*.requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN")
                                 .requestMatchers("api/user/**").hasAnyAuthority("USER")
                                 */
-                                .requestMatchers("/api/adminuser/**").hasAnyAuthority("ADMIN", "USER")
+                                .requestMatchers("/api/adminuser/**").permitAll()
+                                .requestMatchers("/api/donations/**").permitAll()
+                                .requestMatchers("/api/beneficiaries/**").permitAll()
+
                                 .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
@@ -62,6 +64,4 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
-
 }

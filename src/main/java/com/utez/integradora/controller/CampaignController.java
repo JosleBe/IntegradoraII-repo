@@ -46,7 +46,7 @@ public class CampaignController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<ApiResponse> getAllCampaigns() {
         log.info("Listando todas las campanas");
         try {

@@ -42,10 +42,12 @@ public class UsersManagementService {
                     .fechaNacimiento(reqRes.getFecha())
                     .lastName(reqRes.getLastName())
                     .build();
+            var token = jwtUtils.generateToken(ourUsers);
             UserEntity user = userRepository.save(ourUsers);
             if(user.getId()  != null){
                 res.setUser(user);
                 res.setMessage("User successfully registered!");
+                res.setToken(token);
                 res.setStatusCode(200);
             }
 
@@ -135,6 +137,7 @@ public class UsersManagementService {
         }
         return res;
     }
+
     public ReqRes deleteUser(String id ) {
         ReqRes res = new ReqRes();
         try {

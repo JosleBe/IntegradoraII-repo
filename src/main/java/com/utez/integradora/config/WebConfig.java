@@ -15,7 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:3000", "http://localhost:5176", "http://localhost:5174","http://localhost:5173")); // Cambia allowedOrigins por allowedOriginPatterns
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:3000", "http://localhost:5176", "http://localhost:5174","http://localhost:5173", "http://localhost:3002")); // Cambia allowedOrigins por allowedOriginPatterns
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true); // Mantén esto solo si realmente necesitas cookies o autenticación en CORS
